@@ -31895,6 +31895,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _Composables_alert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Composables/alert */ "./resources/js/Composables/alert.js");
+
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'EditNiveauScolaire',
@@ -31920,7 +31924,24 @@ __webpack_require__.r(__webpack_exports__);
       nomError: ""
     });
 
+    var soumettre = function soumettre() {
+      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_1__.Inertia.put(route("niveauscolaire.update", {
+        niveauScolaire: props.niveauScolaireId
+      }), {
+        nom: editNiveauScolaire.nom
+      }, {
+        onSuccess: function onSuccess(response) {
+          (0,_Composables_alert__WEBPACK_IMPORTED_MODULE_2__.useSwalSuccess)('Niveau scolaire mis à jour avec succès !');
+        },
+        onError: function onError(error) {
+          editNiveauScolaire.nomError = error.nom;
+          (0,_Composables_alert__WEBPACK_IMPORTED_MODULE_2__.useSwalError)("Une erreur a été rencontrée");
+        }
+      });
+    };
+
     var openModal = function openModal() {
+      getNiveauScolaireById();
       $("#EditModal").modal("show");
     };
 
@@ -31933,7 +31954,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(route("niveauscolaire.edit", {
         niveauScolaire: props.niveauScolaireId
       })).then(function (response) {
-        console.log("reponse : ", response.data);
+        editNiveauScolaire.id = response.data.niveauScolaire.id;
+        editNiveauScolaire.nom = response.data.niveauScolaire.nom;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -31952,11 +31974,15 @@ __webpack_require__.r(__webpack_exports__);
       emit: emit,
       props: props,
       editNiveauScolaire: editNiveauScolaire,
+      soumettre: soumettre,
       openModal: openModal,
       closeModal: closeModal,
       getNiveauScolaireById: getNiveauScolaireById,
       reactive: vue__WEBPACK_IMPORTED_MODULE_0__.reactive,
-      watch: vue__WEBPACK_IMPORTED_MODULE_0__.watch
+      watch: vue__WEBPACK_IMPORTED_MODULE_0__.watch,
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_1__.Inertia,
+      useSwalSuccess: _Composables_alert__WEBPACK_IMPORTED_MODULE_2__.useSwalSuccess,
+      useSwalError: _Composables_alert__WEBPACK_IMPORTED_MODULE_2__.useSwalError
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -31983,6 +32009,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CreateNiveauScolaire_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateNiveauScolaire.vue */ "./resources/js/Pages/NiveauScolaire/CreateNiveauScolaire.vue");
 /* harmony import */ var _EditNiveauScolaire_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EditNiveauScolaire.vue */ "./resources/js/Pages/NiveauScolaire/EditNiveauScolaire.vue");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Composables_alert__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Composables/alert */ "./resources/js/Composables/alert.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+
+
 
 
 
@@ -31999,6 +32029,29 @@ __webpack_require__.r(__webpack_exports__);
     var editingElementId = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(0);
     var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
 
+    var deleleNiveauScolaire = function deleleNiveauScolaire(id) {
+      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__.Inertia["delete"](route('niveauscolaire.delete', {
+        niveauScolaire: id
+      }), {
+        onSuccess: function onSuccess(response) {
+          (0,_Composables_alert__WEBPACK_IMPORTED_MODULE_4__.useSwalSuccess)('Niveau scolaire Supprimé avec succès !');
+        },
+        onError: function onError(error) {
+          var _error$message;
+
+          console.log(error);
+          (0,_Composables_alert__WEBPACK_IMPORTED_MODULE_4__.useSwalError)((_error$message = error.message) !== null && _error$message !== void 0 ? _error$message : "Une erreur a été rencontrée");
+        }
+      });
+    };
+
+    var supprimer = function supprimer(id) {
+      var message = "Êtes vous sûr de supprimer cet élément ? ";
+      (0,_Composables_alert__WEBPACK_IMPORTED_MODULE_4__.useSwalConfirm)(message, function () {
+        deleleNiveauScolaire(id);
+      });
+    };
+
     var modalClosed = function modalClosed() {
       editingElementId.value = 0;
       showModal.value = false;
@@ -32013,12 +32066,18 @@ __webpack_require__.r(__webpack_exports__);
       editingElementId: editingElementId,
       showModal: showModal,
       props: props,
+      deleleNiveauScolaire: deleleNiveauScolaire,
+      supprimer: supprimer,
       modalClosed: modalClosed,
       openEditModal: openEditModal,
       Pagination: _Shared_Pagination_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
       CreateNiveauScolaire: _CreateNiveauScolaire_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
       EditNiveauScolaire: _EditNiveauScolaire_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-      ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref
+      ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
+      useSwalConfirm: _Composables_alert__WEBPACK_IMPORTED_MODULE_4__.useSwalConfirm,
+      useSwalError: _Composables_alert__WEBPACK_IMPORTED_MODULE_4__.useSwalError,
+      useSwalSuccess: _Composables_alert__WEBPACK_IMPORTED_MODULE_4__.useSwalSuccess,
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__.Inertia
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -32177,8 +32236,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var admin_lte_dist_img_AdminLTELogo_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! admin-lte/dist/img/AdminLTELogo.png */ "./node_modules/admin-lte/dist/img/AdminLTELogo.png");
-/* harmony import */ var admin_lte_dist_img_user2_160x160_jpg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! admin-lte/dist/img/user2-160x160.jpg */ "./node_modules/admin-lte/dist/img/user2-160x160.jpg");
-
 
 
 var _hoisted_1 = {
@@ -32205,7 +32262,7 @@ var _hoisted_3 = {
   "class": "sidebar"
 };
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"user-panel mt-3 pb-3 mb-3 d-flex\"><div class=\"image\"><img src=\"" + admin_lte_dist_img_user2_160x160_jpg__WEBPACK_IMPORTED_MODULE_2__["default"] + "\" class=\"img-circle elevation-2\" alt=\"User Image\"></div><div class=\"info\"><a href=\"#\" class=\"d-block\">Alexander Pierce</a></div></div>", 1);
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"user-panel mt-3 pb-3 mb-3 d-flex\"><div class=\"image\"><img src=\"/images/users/i.JPG\" class=\"img-circle elevation-2\" alt=\"User Image\"></div><div class=\"info\"><a href=\"#\" class=\"d-block\">Ismaél SACKO</a></div></div>", 1);
 
 var _hoisted_5 = {
   "class": "mt-2"
@@ -32891,9 +32948,7 @@ var _hoisted_7 = [_hoisted_6];
 var _hoisted_8 = {
   "class": "modal-body"
 };
-var _hoisted_9 = {
-  id: "editForm"
-};
+var _hoisted_9 = ["onSubmit"];
 var _hoisted_10 = {
   "class": "form-group"
 };
@@ -32925,7 +32980,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "close",
     onClick: $setup.closeModal,
     "aria-label": "Close"
-  }, _hoisted_7)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, _hoisted_7)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    id: "editForm",
+    onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.soumettre, ["prevent"])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     required: "",
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-control", {
@@ -32938,7 +32996,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* CLASS */
   ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.editNiveauScolaire.nom]]), $setup.editNiveauScolaire.nomError != '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.editNiveauScolaire.nomError), 1
   /* TEXT */
-  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 40
+  /* PROPS, HYDRATE_EVENTS */
+  , _hoisted_9)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "modal-footer"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
@@ -33018,15 +33078,15 @@ var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 );
 
 var _hoisted_16 = [_hoisted_15];
+var _hoisted_17 = ["onClick"];
 
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  "class": "btn btn-danger"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "fas fa-trash"
-})], -1
+}, null, -1
 /* HOISTED */
 );
 
+var _hoisted_19 = [_hoisted_18];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CreateNiveauScolaire"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Pagination"], {
     links: $setup.props.niveauScolaires.links,
@@ -33044,7 +33104,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "btn btn-info mr-2"
     }, _hoisted_16, 8
     /* PROPS */
-    , _hoisted_14), _hoisted_17])])]);
+    , _hoisted_14), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      onClick: function onClick($event) {
+        return $setup.supprimer(niveauScolaire.id);
+      },
+      "class": "btn btn-danger"
+    }, _hoisted_19, 8
+    /* PROPS */
+    , _hoisted_17)])])]);
   }), 256
   /* UNKEYED_FRAGMENT */
   ))])])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["EditNiveauScolaire"], {
@@ -33158,6 +33225,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "useSwalConfirm": () => (/* binding */ useSwalConfirm),
 /* harmony export */   "useSwalError": () => (/* binding */ useSwalError),
 /* harmony export */   "useSwalSuccess": () => (/* binding */ useSwalSuccess)
 /* harmony export */ });
@@ -33180,7 +33248,24 @@ function useSwalError(message) {
     animation: false,
     position: "top-end",
     showConfirmButton: false,
-    timer: 4000
+    timer: 15000
+  });
+}
+function useSwalConfirm(message, callback) {
+  Swal.fire({
+    html: message,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Oui, supprimer le!',
+    cancelButtonText: 'Non, Fermer.'
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      callback();
+    } else if (result.isDenied) {
+      swal.close();
+    }
   });
 }
 
@@ -34270,21 +34355,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/vendor/admin-lte/dist/AdminLTELogo.png?29bc070fed9b5838d68a2b5df6a8c7d7");
-
-/***/ }),
-
-/***/ "./node_modules/admin-lte/dist/img/user2-160x160.jpg":
-/*!***********************************************************!*\
-  !*** ./node_modules/admin-lte/dist/img/user2-160x160.jpg ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/vendor/admin-lte/dist/user2-160x160.jpg?6b9bafb2a55f8b47a2039afe99d0852e");
 
 /***/ }),
 

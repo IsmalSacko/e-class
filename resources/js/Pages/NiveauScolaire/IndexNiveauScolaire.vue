@@ -20,8 +20,8 @@
                 <CreateNiveauScolaire />
               </div>
               <div class="card-tools">
-                <Pagination 
-                :links="props.niveauScolaires.links" 
+                <Pagination
+                :links="props.niveauScolaires.links"
                 :prev="props.niveauScolaires.prev_page_url"
                 :next="props.niveauScolaires.next_page_url" />
               </div>
@@ -41,7 +41,7 @@
                     <td>
                           <div class="d-flex justify-items-center">
                           <button @click="openEditModal(niveauScolaire.id)"  class="btn btn-info mr-2"><i class="fas fa-pen"></i></button>
-                          <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                          <button @click="supprimer(niveauScolaire.id)" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                           </div>
                     </td>
                   </tr>
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <EditNiveauScolaire 
+  <EditNiveauScolaire
     :niveau-scolaire-id="editingElementId"
     :show="showModal"
     @modal-closed="modalClosed"
@@ -66,6 +66,9 @@
   import CreateNiveauScolaire from './CreateNiveauScolaire.vue';
   import EditNiveauScolaire from './EditNiveauScolaire.vue';
   import {ref} from "vue"
+  import {useSwalConfirm, useSwalError, useSwalSuccess} from "../../Composables/alert";
+  import {Inertia} from "@inertiajs/inertia";
+
 
   const editingElementId = ref(0)
   const showModal = ref(false)
@@ -73,6 +76,26 @@
   const props = defineProps({
     niveauScolaires: Object
   })
+
+  const deleleNiveauScolaire = (id) => {
+    Inertia.delete(route('niveauscolaire.delete', {niveauScolaire:id}),{
+        onSuccess: (response)=>{
+            useSwalSuccess('Niveau scolaire Supprimé avec succès !')
+        },
+
+        onError: (error)=>{
+           console.log(error)
+            useSwalError(error.message?? "Une erreur a été rencontrée")
+        }
+    })
+  }
+
+  const supprimer = (id) => {
+      const message = "Êtes vous sûr de supprimer cet élément ? "
+        useSwalConfirm(message, ()=>{
+            deleleNiveauScolaire(id);
+        })
+  }
 
   const modalClosed = ()=>{
     editingElementId.value = 0
@@ -83,4 +106,7 @@
     editingElementId.value = id
     showModal.value = true
   }
+
+
+
 </script>
